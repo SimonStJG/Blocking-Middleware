@@ -91,7 +91,7 @@ CREATE FUNCTION insert_url_subscription(p_urlid integer, p_contactid integer, p_
     LANGUAGE plpgsql
     AS $$
 DECLARE subid int; BEGIN
-update url_subscriptions set subscribereports = p_subscribereports, created = now() where urlid = p_urlid and contactid = p_contactid returning id into subid; 
+update url_subscriptions set subscribereports = p_subscribereports, created = now() where urlid = p_urlid and contactid = p_contactid returning id into subid;
 IF NOT FOUND
 THEN
 insert into url_subscriptions(urlid, contactid, subscribereports, created) values (p_urlid, p_contactid, p_subscribereports, now()) returning id into subid;
@@ -159,7 +159,7 @@ BEGIN
  UPDATE url_latest_status SET
  status = NEW.status, created = NEW.created, category = NEW.category, blocktype = NEW.blocktype
  WHERE urlid = NEW.urlid and network_name = NEW.network_name;
- 
+
  IF NOT FOUND
  THEN
  insert into url_latest_status (
@@ -177,7 +177,7 @@ BEGIN
  NEW.urlid,
  NEW.network_name
  );
- END IF; 
+ END IF;
  RETURN NEW;
 END;
 $$;
@@ -212,15 +212,15 @@ CREATE FUNCTION trig_uls_ins_upd() RETURNS trigger
 BEGIN
 if NEW.status = 'blocked'
 then
-  if TG_OP = 'INSERT' or (TG_OP = 'UPDATE' AND OLD.first_blocked is NULL ) 
-  then    
+  if TG_OP = 'INSERT' or (TG_OP = 'UPDATE' AND OLD.first_blocked is NULL )
+  then
     select NEW.created into NEW.first_blocked ;
   end if;
   select NEW.created into NEW.last_blocked ;
 
 end if;
 return NEW;
-END; 
+END;
 $$;
 
 
@@ -251,7 +251,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: cache_block_count; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: cache_block_count; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE cache_block_count (
@@ -275,7 +275,7 @@ CREATE SEQUENCE categories_id_seq
 
 
 --
--- Name: categories; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: categories; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE categories (
@@ -293,7 +293,7 @@ CREATE TABLE categories (
 
 
 --
--- Name: contacts; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: contacts; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE contacts (
@@ -327,7 +327,7 @@ ALTER SEQUENCE contacts_id_seq OWNED BY contacts.id;
 
 
 --
--- Name: isp_aliases; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: isp_aliases; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE isp_aliases (
@@ -358,7 +358,7 @@ ALTER SEQUENCE isp_aliases_id_seq OWNED BY isp_aliases.id;
 
 
 --
--- Name: isp_cache; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: isp_cache; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE isp_cache (
@@ -369,7 +369,7 @@ CREATE TABLE isp_cache (
 
 
 --
--- Name: isp_reports; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: isp_reports; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE isp_reports (
@@ -390,7 +390,7 @@ CREATE TABLE isp_reports (
 
 
 --
--- Name: isp_stats_cache; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: isp_stats_cache; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE isp_stats_cache (
@@ -418,7 +418,7 @@ CREATE SEQUENCE isps_id_seq
 
 
 --
--- Name: isps; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: isps; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE isps (
@@ -435,7 +435,7 @@ CREATE TABLE isps (
 
 
 --
--- Name: org_categories; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: org_categories; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE org_categories (
@@ -464,7 +464,7 @@ ALTER SEQUENCE org_categories_id_seq OWNED BY org_categories.id;
 
 
 --
--- Name: probes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: probes; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE probes (
@@ -500,7 +500,7 @@ ALTER SEQUENCE probes_id_seq OWNED BY probes.id;
 
 
 --
--- Name: queue_length; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: queue_length; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE queue_length (
@@ -512,7 +512,7 @@ CREATE TABLE queue_length (
 
 
 --
--- Name: requests; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: requests; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE requests (
@@ -528,7 +528,7 @@ CREATE TABLE requests (
 
 
 --
--- Name: requests_additional_data; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: requests_additional_data; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE requests_additional_data (
@@ -591,7 +591,7 @@ CREATE SEQUENCE results_id_seq
 
 
 --
--- Name: results; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: results; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE results (
@@ -611,7 +611,7 @@ CREATE TABLE results (
 
 
 --
--- Name: site_description; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: site_description; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE site_description (
@@ -642,7 +642,7 @@ ALTER SEQUENCE site_description_id_seq OWNED BY site_description.id;
 
 
 --
--- Name: stats_cache; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: stats_cache; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE stats_cache (
@@ -653,7 +653,7 @@ CREATE TABLE stats_cache (
 
 
 --
--- Name: test; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: test; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE test (
@@ -674,7 +674,7 @@ CREATE SEQUENCE url_categories_id_seq
 
 
 --
--- Name: url_categories; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: url_categories; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE url_categories (
@@ -697,7 +697,7 @@ CREATE SEQUENCE url_latest_status_id_seq
 
 
 --
--- Name: url_latest_status; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: url_latest_status; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE url_latest_status (
@@ -714,7 +714,7 @@ CREATE TABLE url_latest_status (
 
 
 --
--- Name: url_status_changes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: url_status_changes; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE url_status_changes (
@@ -748,7 +748,7 @@ ALTER SEQUENCE url_status_changes_id_seq OWNED BY url_status_changes.id;
 
 
 --
--- Name: url_subscriptions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: url_subscriptions; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE url_subscriptions (
@@ -795,7 +795,7 @@ CREATE SEQUENCE urls_id_seq
 
 
 --
--- Name: urls; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: urls; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE urls (
@@ -816,7 +816,7 @@ CREATE TABLE urls (
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE users (
@@ -925,7 +925,7 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 
 
 --
--- Name: cache_block_count_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: cache_block_count_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY cache_block_count
@@ -933,7 +933,7 @@ ALTER TABLE ONLY cache_block_count
 
 
 --
--- Name: categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY categories
@@ -941,7 +941,7 @@ ALTER TABLE ONLY categories
 
 
 --
--- Name: contacts_email_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: contacts_email_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY contacts
@@ -949,7 +949,7 @@ ALTER TABLE ONLY contacts
 
 
 --
--- Name: contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY contacts
@@ -957,7 +957,7 @@ ALTER TABLE ONLY contacts
 
 
 --
--- Name: isp_aliases_alias_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: isp_aliases_alias_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY isp_aliases
@@ -965,7 +965,7 @@ ALTER TABLE ONLY isp_aliases
 
 
 --
--- Name: isp_aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: isp_aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY isp_aliases
@@ -973,7 +973,7 @@ ALTER TABLE ONLY isp_aliases
 
 
 --
--- Name: isp_cache_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: isp_cache_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY isp_cache
@@ -981,7 +981,7 @@ ALTER TABLE ONLY isp_cache
 
 
 --
--- Name: isp_stats_cache_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: isp_stats_cache_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY isp_stats_cache
@@ -989,7 +989,7 @@ ALTER TABLE ONLY isp_stats_cache
 
 
 --
--- Name: isps_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: isps_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY isps
@@ -997,7 +997,7 @@ ALTER TABLE ONLY isps
 
 
 --
--- Name: org_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: org_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY org_categories
@@ -1005,7 +1005,7 @@ ALTER TABLE ONLY org_categories
 
 
 --
--- Name: probes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: probes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY probes
@@ -1013,7 +1013,7 @@ ALTER TABLE ONLY probes
 
 
 --
--- Name: probes_uuid_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: probes_uuid_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY probes
@@ -1021,7 +1021,7 @@ ALTER TABLE ONLY probes
 
 
 --
--- Name: queue_length_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: queue_length_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY queue_length
@@ -1029,7 +1029,7 @@ ALTER TABLE ONLY queue_length
 
 
 --
--- Name: requests_additional_data_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: requests_additional_data_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY requests_additional_data
@@ -1037,7 +1037,7 @@ ALTER TABLE ONLY requests_additional_data
 
 
 --
--- Name: requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY requests
@@ -1045,7 +1045,7 @@ ALTER TABLE ONLY requests
 
 
 --
--- Name: results_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: results_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY results
@@ -1053,7 +1053,7 @@ ALTER TABLE ONLY results
 
 
 --
--- Name: site_description_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: site_description_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY site_description
@@ -1061,7 +1061,7 @@ ALTER TABLE ONLY site_description
 
 
 --
--- Name: stats_cache_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: stats_cache_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY stats_cache
@@ -1069,7 +1069,7 @@ ALTER TABLE ONLY stats_cache
 
 
 --
--- Name: url_latest_status_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: url_latest_status_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY url_latest_status
@@ -1077,7 +1077,7 @@ ALTER TABLE ONLY url_latest_status
 
 
 --
--- Name: url_status_changes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: url_status_changes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY url_status_changes
@@ -1085,7 +1085,7 @@ ALTER TABLE ONLY url_status_changes
 
 
 --
--- Name: url_subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: url_subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY url_subscriptions
@@ -1093,7 +1093,7 @@ ALTER TABLE ONLY url_subscriptions
 
 
 --
--- Name: url_subscriptions_token_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: url_subscriptions_token_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY url_subscriptions
@@ -1101,7 +1101,7 @@ ALTER TABLE ONLY url_subscriptions
 
 
 --
--- Name: urls_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: urls_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY urls
@@ -1109,7 +1109,7 @@ ALTER TABLE ONLY urls
 
 
 --
--- Name: users_email_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: users_email_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY users
@@ -1117,7 +1117,7 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY users
@@ -1125,49 +1125,49 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: cat_tree; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: cat_tree; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE INDEX cat_tree ON categories USING gist (tree);
 
 
 --
--- Name: categories_name_fts; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: categories_name_fts; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE INDEX categories_name_fts ON categories USING gin (name_fts);
 
 
 --
--- Name: isp_aliases_ispid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: isp_aliases_ispid; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE INDEX isp_aliases_ispid ON isp_aliases USING btree (ispid);
 
 
 --
--- Name: isp_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: isp_name; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX isp_name ON isps USING btree (name);
 
 
 --
--- Name: results_url_network; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: results_url_network; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE INDEX results_url_network ON results USING btree (urlid, network_name);
 
 
 --
--- Name: site_description_urlid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: site_description_urlid; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE INDEX site_description_urlid ON site_description USING btree (urlid);
 
 
 --
--- Name: source; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: source; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE INDEX source ON urls USING btree (source);
@@ -1175,28 +1175,28 @@ CREATE INDEX source ON urls USING btree (source);
 CREATE INDEX url_tags on urls using gin(tags);
 
 --
--- Name: uls_url_network; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: uls_url_network; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX uls_url_network ON url_latest_status USING btree (urlid, network_name);
 
 
 --
--- Name: url_status_changes_created; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: url_status_changes_created; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE INDEX url_status_changes_created ON url_status_changes USING btree (created);
 
 
 --
--- Name: urls_url; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: urls_url; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX urls_url ON urls USING btree (url);
 
 
 --
--- Name: urlsub_contact; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: urlsub_contact; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX urlsub_contact ON url_subscriptions USING btree (urlid, contactid);
@@ -1274,13 +1274,13 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-create or replace function fmtime(x timestamptz) returns varchar AS $$ 
+create or replace function fmtime(x timestamptz) returns varchar AS $$
 begin
 return to_char(x, 'YYYY-MM-DD HH24:MI:SS');
 end;
 $$ language plpgsql immutable;
 
-create or replace function fmtime(x timestamp) returns varchar AS $$ 
+create or replace function fmtime(x timestamp) returns varchar AS $$
 begin
 return to_char(x, 'YYYY-MM-DD HH24:MI:SS');
 end;
@@ -1302,15 +1302,15 @@ CREATE TABLE stats.category_stats (
 
 create table stats.domain_stats(
     id varchar(32) not null,
-    name varchar(64), 
-    description text, 
-    block_count int, 
+    name varchar(64),
+    description text,
+    block_count int,
     total int
 );
 
 create table stats.domain_isp_stats(
-    id serial, 
-    tag varchar(32), 
-    network_name varchar(64), 
+    id serial,
+    tag varchar(32),
+    network_name varchar(64),
     block_count int
 );

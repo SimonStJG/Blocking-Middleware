@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  web:
+    build: web
+    ports:
+      - "80:80"
+
+  rabbitmq:
+    image: rabbitmq:3.6.12-alpine
+    ports: "5672:5672"
+
+  db:
+    build: db
