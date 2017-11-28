@@ -5,28 +5,6 @@ Blocked.org.uk Middleware
 
 [Database Specification](https://wiki.openrightsgroup.org/wiki/Censorship_Monitoring_Project_DB)
 
-Using the Vagrant VM Image
---------------------------
-
-Download and install:
-
-* [Oracle Virtualbox](https://www.virtualbox.org/wiki/Downloads)
-* [Vagrant](https://www.vagrantup.com/downloads.html)
-
-Obtain a git checkout of the Blocking Middleware repository, then run:
-
-    cd /path/to/Blocking-Middleware
-    vagrant up
-
-This will set up and run the VM image. The initial download of the compressed filesystem image can take a few minutes (size: 500MB)
-
-The resulting VM contains a webserver configured to service requests by running the PHP pages from your checkout.  A MySQL database and RabbitMQ instance will be created and configured in the VM when it is first booted.
-
-You should then be able to execute API commands against your local running instance by
-using the base URL [http://localhost:8080/1.2/](http://localhost:8080/1.2/)
-
-The example client directory is accessible through the URL [http://localhost:8080/example-client/](http://localhost:8080/example-client/).
-
 Get involved!
 -------------
 
