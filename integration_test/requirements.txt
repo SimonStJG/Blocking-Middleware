@@ -1,0 +1,4 @@
+pytest
+requests
+amqplib
+pytest-timeout
