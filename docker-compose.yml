@@ -1,0 +1,95 @@
+version: '3.3'
+
+services:
+  web:
+    build: web
+    ports:
+      - "80:80"
+    networks:
+      - middleware_network
+    environment:
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASS=${POSTGRES_PASS}
+
+  rabbitmq:
+    # Setting the hostname is important for persisting data, see section
+    # "Running the daemon" of https://hub.docker.com/_/rabbitmq/
+    hostname: rabbitmq
+    image: rabbitmq:3.6.12-management-alpine
+    networks:
+      - middleware_network
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+
+  db:
+    image: postgres:9.6.5-alpine
+    networks:
+      - middleware_network
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASS}
+      - POSTGRES_DB=BlockingMiddlewareDb
+
+  redis:
+    image: redis:4-alpine
+    networks:
+      - middleware_network
+    volumes:
+      - redis:/data
+
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.0.0
+    networks:
+      - middleware_network
+    volumes:
+      - elastic:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+
+  robots_txt_checker:
+    build: robots_txt_checker
+    networks:
+      - middleware_network
+    environment:
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASS=${POSTGRES_PASS}
+
+  metadata_gather:
+    build: metadata_gather
+    networks:
+      - middleware_network
+    environment:
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASS=${POSTGRES_PASS}
+
+  populate_elastic:
+    build: populate_elastic
+    networks:
+      - middleware_network
+    environment:
+      - DB=user=${POSTGRES_USER} password=${POSTGRES_PASS} host=db port=5432 dbname=BlockingMiddlewareDb
+
+volumes:
+  db:
+  rabbitmq:
+  redis:
+  elastic:
+
+networks:
+  middleware_network:

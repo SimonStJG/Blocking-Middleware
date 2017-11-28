@@ -30,9 +30,9 @@ function send_urls($result) {
     }
     return $c;
 }
-		
-$result = $conn->query("select urlid, url, hash from urls 
-	where (lastpolled is null ) and 
+
+$result = $conn->query("select urlid, url, hash from urls
+	where (lastpolled is null ) and
 	source not in ('social') and status = 'ok' order by lastpolled limit 100", array());
 
 print "Sending URLs (untested)...\n";
@@ -41,10 +41,11 @@ print "$c urls sent.\n";
 
 
 $placeholders = implode(",",array_pad(array(), count($REQUEUE_EXCLUDE_SOURCES), "?"));
+$exclude_sources_query_fragment = empty($placeholders) ? "source not in ($placeholders)" : '';
 
-$result = $conn->query("select urlid, url, hash from urls 
-	where (lastpolled < (now() - interval '7 day')) and 
-	source not in ($placeholders) and status = 'ok' order by lastpolled limit 100", 
+$result = $conn->query("select urlid, url, hash from urls
+    where (lastpolled < (now() - interval '7 day')) and
+    $exclude_sources_query_fragment and status = 'ok' order by lastpolled limit 100",
     $REQUEUE_EXCLUDE_SOURCES
     );
 
@@ -55,7 +56,7 @@ print "$c urls sent.\n";
 $result = $conn->query("select distinct urlid, url, hash, lastpolled from urls
     inner join isp_reports using (urlID)
     where (lastpolled < (now() - interval '1 day')) and
-    urls.status = 'ok' and unblocked = 0 and isp_reports.status <= 'sent' 
+    urls.status = 'ok' and unblocked = 0 and isp_reports.status <= 'sent'
     order by lastpolled limit 100", array());
 
 print "Sending URLs (reported)...\n";
@@ -66,17 +67,17 @@ print "$c urls sent.\n";
 
 CREATE TABLE blocked_dmoz(urlid int primary key) engine=InnoDB;
 
-INSERT IGNORE INTO blocked_dmoz(urlid) 
-SELECT Urls.urlid 
-FROM Urls 
-INNER JOIN url_latest_status uls USING (urlid) 
+INSERT IGNORE INTO blocked_dmoz(urlid)
+SELECT Urls.urlid
+FROM Urls
+INNER JOIN url_latest_status uls USING (urlid)
 WHERE uls.status = 'blocked' AND urls.status = 'ok' AND source = 'dmoz';
 
 */
 
 $result = $conn->query("select urlid, url, hash from urls
     inner join blocked_dmoz using (urlID)
-    where (lastpolled < (now() - interval '1 day')) 
+    where (lastpolled < (now() - interval '1 day'))
     order by lastpolled limit 50", array());
 
 print "Sending URLs (blocked dmoz)...\n";

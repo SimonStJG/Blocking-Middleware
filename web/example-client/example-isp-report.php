@@ -25,16 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 	// get the JSON data back from the api
 	$urldata = json_decode($result);
 
-    print_r($urldata);
+  print_r($urldata);
 
-    $networks = array();
-    foreach ($urldata->results as $result) {
-        if ($result->status == "blocked") {
-            $networks[] = array($result->network_name, $result->network_id);
-        }
+  $networks = array();
+  foreach ($urldata->results as $result) {
+      if ($result->status == "blocked") {
+          $networks[] = array($result->network_name, $result->network_id);
+      }
 
-    }
-    print_r($networks);
+  }
+  print_r($networks);
 
 	// now display
 ?>

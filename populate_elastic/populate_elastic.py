@@ -29,7 +29,7 @@ def debug_response(data, r):
 @register
 def categories(conn):
     c = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    c.execute("""select id, display_name, name, 
+    c.execute("""select id, display_name, name,
         block_count, blocked_url_count, total_block_count, total_blocked_url_count
         from categories
         where total_block_count >0
@@ -37,7 +37,7 @@ def categories(conn):
 
     for row in c:
         parts = row['display_name'].split('/')
-        data = { 
+        data = {
             'id': row['id'],
             'name': row['name'],
             'block_count': row['block_count'],
@@ -60,9 +60,9 @@ def categories(conn):
 
 def get_categories(conn, urlid):
     c = conn.cursor()
-    c.execute("""select categories.id, categories.name, categories.display_name 
-            from categories 
-            inner join categories x on x.tree <@ categories.tree 
+    c.execute("""select categories.id, categories.name, categories.display_name
+            from categories
+            inner join categories x on x.tree <@ categories.tree
             inner join url_categories on x.id = url_categories.category_id
             where url_categories.urlid = %s
             order by categories.tree""",
@@ -76,7 +76,7 @@ def update_elastic(row, categories=[]):
         'id': row['urlid'],
         'title': row['title'],
         'tags': row['tags'],
-        'url': row['url'], 
+        'url': row['url'],
         'source': row['source'],
         'categories': categories
         }
@@ -112,7 +112,7 @@ def urls(conn):
         left join site_description using (urlid)
         left join blocked_dmoz on blocked_dmoz.urlid = urls.urlid
         left join isp_reports on isp_reports.urlid = urls.urlid and network_name = 'ORG'
-        where urls.urlid in (select urlid from url_latest_status where status = 'blocked' and network_name in 
+        where urls.urlid in (select urlid from url_latest_status where status = 'blocked' and network_name in
             (select name from isps where queue_name is not null)
             ) and isp_reports.id is null
         order by urlid
@@ -143,8 +143,8 @@ def changes(conn):
         # count up blocks from active networks
         urlid = row[0]
         logging.info("Processing urlid: %s", urlid)
-        c2.execute("""select count(*) ct from url_latest_status where 
-                status = 'blocked' AND 
+        c2.execute("""select count(*) ct from url_latest_status where
+                status = 'blocked' AND
                 network_name in (select name from isps where queue_name is not null)
                 AND urlid = %s""",
             [urlid])
@@ -199,13 +199,14 @@ def changes(conn):
 
 
 if __name__ == '__main__':
+    print os.getenv('DB')
     parser = argparse.ArgumentParser()
-    parser.add_argument('--db', default=os.getenv('DB'), 
+    parser.add_argument('--db', default=os.getenv('DB'),
         help="DB connection string")
     parser.add_argument('--elastic', help="Elastic server address")
-    parser.add_argument('--verbose', '-v', action='store_true', default=False, 
+    parser.add_argument('--verbose', '-v', action='store_true', default=False,
         help="Verbose logging")
-    parser.add_argument('--dummy', '-n', action='store_true', default=False, 
+    parser.add_argument('--dummy', '-n', action='store_true', default=False,
         help="Dummy mode")
     parser.add_argument('--since', default=None, help="Start timestamp for changes")
     parser.add_argument('--interval', default=None, help="timeperiod for changes")

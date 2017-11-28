@@ -8,7 +8,7 @@ import psycopg2
 import resource
 import urlparse
 import robotparser
-import ConfigParser
+import configparser
 
 import requests
 #import requests_cache
@@ -38,7 +38,7 @@ class MetadataGatherer(object):
     def save_description(self, url, data):
         c = self.conn.cursor()
         #c.execute("update urls set description = %s where url = %s", )
-        c.execute("""insert into site_description(urlid, created, description) 
+        c.execute("""insert into site_description(urlid, created, description)
             select urlID, now(), %s from urls where url = %s""",
                 [json.dumps(data), url]
             )
@@ -91,11 +91,15 @@ class MetadataGatherer(object):
 def main():
 
     # set up cache for robots.txt content
-    cfg = ConfigParser.ConfigParser()
+    cfg = configparser.ConfigParser(
+        interpolation=configparser.ExtendedInterpolation(),
+        defaults=os.environ)
+
     assert(len(cfg.read(['config.ini'])) == 1)
 
     # create MySQL connection
-    pgopts = dict(cfg.items('db'))
+    pgopts = dict([(k, v) for (k, v) in cfg.items('db')
+                   if k in ['host', 'user', 'password', 'dbname']])
     conn = psycopg2.connect(**pgopts)
 
     # Create AMQP connection

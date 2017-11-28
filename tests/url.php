@@ -2,7 +2,7 @@
 
 /* Tests for the url library */
 
-include "../api/1.2/libs/url.php";
+include __DIR__ . "/../web/api/1.2/libs/url.php";
 
  //one of these days I'll use phpunit
 

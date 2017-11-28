@@ -4,7 +4,7 @@
 
 $API = "http://localhost/1.2"; // local test URL
 $USER = 'example@blocked.org.uk';
-$SECRET = 'abcdefghijklmnopqrstuvwxyz123';
+$SECRET = 'PAFBjZmUPp4d3XTcookscqndJwo2LlHAWmcg';
 
 function createSignatureHash($message, $secret) {
 	/* Use hmac functions to return signature for message string */
@@ -22,4 +22,3 @@ function sign($secret, $data, $keys) {
 	$signdata = implode(":",$items);
 	return createSignatureHash($signdata, $secret);
 }
-

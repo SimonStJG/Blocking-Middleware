@@ -7,7 +7,7 @@ import logging
 import argparse
 import urlparse
 import robotparser
-import ConfigParser
+import configparser
 
 import requests
 
@@ -35,7 +35,7 @@ to spiders, the URL is dropped and the status is written back to the DB.
 If robots.txt permits spidering of the target URL, the message is forwarded
 to the regular per-isp queues.
 
-The content of the robots.txt file for each domain is cached for <n> days 
+The content of the robots.txt file for each domain is cached for <n> days
 (configurable)
 
 This script was written in python to take advantage of the standard library's
@@ -124,7 +124,7 @@ class BlockedRobotsTxtChecker(object):
         except Exception,v:
             # if anything bad happens, log it but continue
             logging.error("HEAD Exception: %s", v)
-                
+
 
         # pass the message to the regular location
         msgsend = amqp.Message(msg.body)
@@ -137,16 +137,20 @@ class BlockedRobotsTxtChecker(object):
 def main():
 
     # set up cache for robots.txt content
-    cfg = ConfigParser.ConfigParser()
+    cfg = configparser.ConfigParser(
+            interpolation=configparser.ExtendedInterpolation(),
+            defaults=os.environ)
+
     assert(len(cfg.read([args.config])) == 1)
 
-    # create MySQL connection
+    # create db connection
     print cfg.has_option('daemon', 'status-queue'), args.receive
     if cfg.has_option('daemon', 'status-queue') and not args.receive:
         conn = None
     else:
         import psycopg2
-        pgopts = dict(cfg.items('db'))
+        pgopts = dict([(k, v) for (k, v) in cfg.items('db')
+                       if k in ['host', 'user', 'password', 'dbname']])
         conn = psycopg2.connect(**pgopts)
 
     # Create AMQP connection
